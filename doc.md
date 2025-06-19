@@ -1,127 +1,118 @@
-Claro! Aqui está um exemplo de **documentação clara e organizada** para seu projeto da disciplina de **Fundamentos de Machine Learning – C318**, pronta para ser entregue ou usada como base em um relatório `.docx`, `.ipynb`, Markdown ou apresentação:
-
----
-
 # 📘 Projeto de Machine Learning – C318
 
 ## Previsão de Desempenho Escolar com Base em Fatores Socioeconômicos
 
-**Aluno:** Ana Julia Pinto e Luís Eduardo Mendes de Carvalho
+**Alunos:** Ana Julia Pinto e Luís Eduardo Mendes de Carvalho
+**Disciplina:** Tópicos Especiais II – Fundamentos de Machine Learning
 **Tema:** Classificação binária – Aprovado ou Reprovado com base em dados educacionais
-**Dataset:** [Students Performance Dataset (Kaggle)](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams)
+**Fonte de dados:** [Students Performance Dataset (Kaggle)](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams)
 
 ---
 
 ## 📌 1. Objetivo do Projeto
 
-O objetivo deste projeto é **prever se um aluno será aprovado ou reprovado** com base em informações socioeconômicas e educacionais como:
+Nosso objetivo foi desenvolver um modelo de machine learning capaz de prever se um aluno será aprovado ou reprovado com base em variáveis socioeconômicas e de contexto escolar, como:
 
 * Gênero
-* Tipo de almoço
+* Tipo de almoço fornecido
 * Escolaridade dos pais
-* Curso preparatório
+* Curso preparatório para o teste
 * Grupo étnico
 
-A **classificação binária** será feita com base na **média das notas** em Matemática, Leitura e Escrita. Consideramos o aluno **"Aprovado" se a média for ≥ 60**.
+A classificação é binária: consideramos um aluno aprovado se a média das três notas (matemática, leitura e escrita) for maior ou igual a 60.
 
 ---
 
-## 🧠 2. Formulação do Problema
+## 🧐 2. Formulação do Problema
 
-* **Tipo de aprendizado:** Aprendizado Supervisionado
-* **Tarefa:** Classificação
-* **Variável alvo (target):** Situação do aluno (Aprovado = 1, Reprovado = 0)
+* Tipo de Aprendizado: Supervisionado
+* Tarefa: Classificação
+* Variável alvo (target): aprovação (1 para aprovado, 0 para reprovado)
 
 ---
 
-## 📥 3. Coleta de Dados
+## 📅 3. Coleta de Dados
 
-O dataset utilizado está disponível publicamente no Kaggle e contém 1000 registros de alunos com as seguintes variáveis:
+O conjunto de dados contém informações de 1000 estudantes e inclui as seguintes colunas principais:
 
-```plaintext
-gender, race/ethnicity, parental level of education,
-lunch, test preparation course, math score, reading score, writing score
-```
+* Gênero (masculino ou feminino)
+* Grupo étnico (grupos A a E)
+* Escolaridade dos pais (níveis variados)
+* Tipo de almoço (padrão ou gratuito/reduzido)
+* Participação em curso preparatório
+* Notas de matemática, leitura e escrita
 
 ---
 
 ## 🧼 4. Pré-processamento
 
-* Criação da variável `media`: média das três notas.
-* Criação da variável `aprovado`: 1 se média ≥ 60, 0 caso contrário.
+Etapas realizadas:
+
+* Criação da variável `media`: média aritmética das três notas.
+* Criação da variável binária `aprovado`: 1 se média ≥ 60, 0 caso contrário.
 * Codificação one-hot para variáveis categóricas.
-* Divisão do dataset em treino (70%) e teste (30%).
+* Separação dos dados em treino (70%) e teste (30%).
 
 ---
 
 ## 📊 5. Análise Exploratória
 
-Observamos que:
+🔵 Gráfico 1 – Distribuição de Aprovados e Reprovados:
 
-* A maioria dos alunos não fez curso preparatório.
-* A maior parte dos alunos com almoço gratuito ou reduzido teve média inferior a 60.
-* As notas de matemática são, em média, menores que as de leitura e escrita.
+![Distribuição de Aprovação](distribuicaoApro.png)
+
+A maior parte dos alunos foi classificada como aprovada. Isso indica um leve desbalanceamento das classes, algo que pode influenciar o desempenho do modelo.
+
+🔵 Gráfico 2 – Distribuição da média por tipo de almoço:
+
+![Distribuição por tipo de almoço](almoco.png)
+
+Aqui percebemos uma diferença clara: alunos com almoço padrão tendem a ter desempenho melhor do que aqueles com almoço gratuito ou reduzido. Essa diferença levanta a hipótese de que fatores socioeconômicos realmente afetam o rendimento.
 
 ---
 
-## 🧪 6. Treinamento do Modelo
+## 🤖 6. Treinamento do Modelo
 
-* Algoritmo usado: `RandomForestClassifier`
-* Métricas de avaliação: acurácia, precisão, recall, f1-score, matriz de confusão
+* Algoritmo utilizado: Random Forest
+* Métricas analisadas: acurácia, precisão, recall, F1-score e matriz de confusão
 
 ---
 
 ## 📈 7. Importância das Variáveis
 
-A variável **tipo de almoço** demonstrou alta importância no modelo. Essa variável, embora aparentemente simples, pode refletir aspectos socioeconômicos mais amplos que afetam diretamente a aprendizagem.
-Alunos com almoço gratuito ou reduzido apresentaram médias mais baixas, sugerindo uma possível relação entre **renda familiar** e **desempenho escolar**.
+🔵 Gráfico 3 – Importância das variáveis no modelo:
 
-Por outro lado, a **escolaridade dos pais**, esperada como um bom preditor, apresentou **baixa importância**. Isso pode ser explicado por:
+![Importância das variáveis](modelo.png)
 
-* Correlação fraca com o target no conjunto atual
-* Baixa variabilidade da variável
-* Redundância com outras features mais informativas
+Surpreendentemente, o fator mais importante foi o tipo de almoço. Isso mostra como uma variável simples pode servir como indicador indireto de questões como renda familiar. O curso preparatório também teve impacto alto.
 
----
-
-## 📊 8. Avaliação – Matriz de Confusão
-
-|                    | Previsto Aprovado | Previsto Reprovado |
-| ------------------ | ----------------- | ------------------ |
-| **Real Aprovado**  | 82                | 8                  |
-| **Real Reprovado** | 6                 | 24                 |
-
-### 🔍 Interpretação:
-
-* **VP (82)**: Modelo acertou quem foi aprovado.
-* **VN (24)**: Modelo acertou quem foi reprovado.
-* **FP (6)**: Previu aprovação, mas foi reprovado.
-* **FN (8)**: Previu reprovação, mas foi aprovado.
-
-### 📐 Métricas:
-
-* **Acurácia:** 88.6%
-* **Precisão:** 93.1%
-* **Recall:** 91.1%
-* **F1-score:** 92.1%
+Já a escolaridade dos pais teve pouca influência no modelo — o que foi inesperado. Talvez ela não reflita diretamente o apoio educacional em casa ou esteja mascarada por outras variáveis.
 
 ---
 
-## 📌 9. Conclusão
+## 📊 8. Avaliação do Modelo
 
-O modelo conseguiu atingir uma **boa performance** em prever aprovação escolar com base em informações socioeconômicas.
-O tipo de almoço e o curso preparatório se mostraram os fatores mais relevantes, levantando discussões sobre o impacto da **desigualdade social na educação**.
+🔵 Gráfico 4 – Matriz de Confusão:
 
-A baixa influência da escolaridade dos pais levanta hipóteses interessantes e demonstra que **a percepção intuitiva nem sempre reflete a realidade dos dados**.
+![Matriz de Confusão](matriz.png)
+
+A matriz mostra que o modelo acertou muitos casos de aprovação, mas teve erros importantes, principalmente falsos positivos (alunos reprovados que foram previstos como aprovados). Isso sugere que, embora o desempenho geral tenha sido bom, o modelo ainda pode ser ajustado para reduzir erros.
+
+📀 Métricas:
+
+* Acurácia: 84.5%
+* Precisão: 75.7%
+* Recall: 87.4%
+* F1-score: 81.1%
+
+Esses valores mostram um equilíbrio razoável entre os tipos de erro, mas o recall alto nos aprovados indica que o modelo está mais “generoso” em prever aprovação.
 
 ---
 
-## 📎 10. Possíveis Extensões
+## ✅ 9. Conclusão
 
-* Usar algoritmos adicionais (XGBoost, SVM)
-* Implementar métricas de custo por erro
-* Trabalhar com dados educacionais reais do Brasil (INEP, ENEM)
+O modelo conseguiu resultados satisfatórios e demonstrou que é possível prever aprovação escolar com base em fatores externos às notas.
 
----
+O destaque do tipo de almoço como a variável mais relevante nos fez refletir sobre como elementos econômicos, mesmo indiretamente, impactam o aprendizado. Isso reforça a importância de políticas públicas que ofereçam suporte alimentar e preparação escolar.
 
-Se quiser, posso gerar isso em `.ipynb`, `.md` ou `.docx`, ou até integrar com gráficos de `seaborn` e `sklearn` para deixar completo. Deseja isso?
+Também nos chamou atenção o fato da escolaridade dos pais não ter peso significativo. Isso pode indicar que o ambiente doméstico ou as condições de estudo importam mais do que o nível de formação dos responsáveis.
